@@ -9,7 +9,7 @@ import Dict
 
 type Msg
     = StoreMovie (Result Http.Error Movie)
-    | ReviewMovie MovieModel.ID Review
+    | GetMovie MovieValueObject
     | None
 
 
@@ -44,36 +44,8 @@ update msg model =
                 Err err ->
                     model ! []
 
-        ReviewMovie id review ->
-            (model |> Dict.update id (Maybe.map (\movie -> { movie | review = Just review }))) ! []
-
-
-editReview : EditingMovies -> MovieModel.ID -> (Review -> Review) -> EditingMovies
-editReview editings id fn =
-    editings
-        |> Dict.update id
-            (Maybe.map
-                (\movie ->
-                    { movie
-                        | review =
-                            Just
-                                (movie.review
-                                    |> Maybe.map fn
-                                    |> Maybe.withDefault (fn (Review 0 ""))
-                                )
-                    }
-                )
-            )
-
-
-editReviewPoint : EditingMovies -> MovieModel.ID -> Int -> EditingMovies
-editReviewPoint editings id point =
-    editReview editings id (\review -> { review | point = point })
-
-
-editReviewDescribe : EditingMovies -> MovieModel.ID -> String -> EditingMovies
-editReviewDescribe editings id describe =
-    editReview editings id (\review -> { review | describe = describe })
+        GetMovie movie ->
+            model ! [ (getMovie movie.id (Just movie)) ]
 
 
 getMovie : MovieModel.ID -> Maybe MovieValueObject -> Cmd Msg
@@ -87,11 +59,32 @@ getMovie id movieVo =
 
 storeReview : Movie -> Review -> Cmd Msg
 storeReview movie review =
-    let
-        log =
-            Debug.log "storeReview:movie" movie
+    Cmd.none
 
-        log2 =
-            Debug.log "storeReview:review" review
-    in
-        Cmd.none
+
+
+-- | ReviewMovie MovieModel.ID Review
+-- ReviewMovie id review ->
+--     (model |> Dict.update id (Maybe.map (\movie -> { movie | review = Just review }))) ! []
+-- editReview : EditingMovies -> MovieModel.ID -> (Review -> Review) -> EditingMovies
+-- editReview editings id fn =
+--     editings
+--         |> Dict.update id
+--             (Maybe.map
+--                 (\movie ->
+--                     { movie
+--                         | review =
+--                             Just
+--                                 (movie.review
+--                                     |> Maybe.map fn
+--                                     |> Maybe.withDefault (fn (Review 0 ""))
+--                                 )
+--                     }
+--                 )
+--             )
+-- editReviewPoint : EditingMovies -> MovieModel.ID -> Int -> EditingMovies
+-- editReviewPoint editings id point =
+--     editReview editings id (\review -> { review | point = point })
+-- editReviewDescribe : EditingMovies -> MovieModel.ID -> String -> EditingMovies
+-- editReviewDescribe editings id describe =
+--     editReview editings id (\review -> { review | describe = describe })

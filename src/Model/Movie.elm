@@ -1,6 +1,5 @@
 module Model.Movie exposing (Movie, ID, decodeMovie, updateBase)
 
-import Model.Review exposing (Review)
 import Json.Decode as Decode
 import Model.Schedule exposing (MovieValueObject)
 
@@ -27,7 +26,6 @@ type alias Movie =
     , story : Story
     , pageUrl : PageUrl
     , base : Maybe MovieValueObject
-    , review : Maybe Review
     }
 
 
@@ -44,4 +42,4 @@ decodeMovie =
         (Decode.field "story" Decode.string)
         (Decode.field "page_url" Decode.string)
     )
-        |> Decode.map (\fn -> fn Nothing Nothing)
+        |> Decode.map (\fn -> fn Nothing)

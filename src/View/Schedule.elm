@@ -1,15 +1,24 @@
 module View.Schedule exposing (..)
 
 import Update.Main as MainUpdate
-import Msg exposing (Msg)
+import Update.Schedule as ScheduleUpdate
+import Update.Movie as MovieUpdate
+import Navigation.Navigator as Navigator exposing (Msg(CombineMsg))
 import NativeUi as Ui
 import NativeUi.Elements as Elements
 import NativeUi.Style as Style
 import NativeUi.Properties as Properties
-import NativeUi.Events as Events
-import Model.Schedule as Schedule
-import Navigation.Scene as Scene
 import Navigation.Navigator as Navigator
+import NativeUi.Events as Events
+
+
+-- import NativeUi.Events as Events
+
+import Model.Schedule as Schedule
+
+
+-- import Navigation.Navigator as Navigator
+
 import Json.Encode
 
 
@@ -21,7 +30,12 @@ view model =
                 |> Maybe.map scheduleView
                 |> Maybe.withDefault loadingView
     in
-        Elements.view [] [ schedule ]
+        Elements.view [] [ linkReviews, schedule ]
+
+
+linkReviews : Ui.Node Msg
+linkReviews =
+    Elements.text [ Ui.style [ Style.height 35 ], Events.onPress (Navigator.PushReviewedList) ] [ Ui.string "reviews" ]
 
 
 scheduleView : Schedule.Schedule -> Ui.Node Msg
@@ -36,13 +50,10 @@ movieView movie =
             movie
 
         onPressEvent =
-            -- ScheduleMsg <| ScheduleUpdate.MovieDetail movie
-            Msg.NavigatorMsg <| Navigator.Scene <| Scene.MovieDetailPage id <| movie
+            CombineMsg [ Navigator.PushMovieDetail movie, Navigator.AppMsg <| MainUpdate.MovieMsg <| MovieUpdate.GetMovie movie ]
     in
         Elements.view
-            [-- Ui.style
-             -- [ Style.height 64 ]
-            ]
+            []
             [ Elements.text
                 [ Ui.style [ Style.textAlign "center" ]
                 , Events.onPress onPressEvent
@@ -61,7 +72,7 @@ movieView movie =
 
 loadingView : Ui.Node Msg
 loadingView =
-    Elements.view []
+    Elements.view [ Ui.style [ Style.height 54, Style.width 54 ] ]
         [ Elements.text [] [ Ui.string "loading..." ] ]
 
 

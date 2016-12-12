@@ -1,12 +1,14 @@
 module Update.Main exposing (..)
 
 import Update.Schedule as ScheduleUpdate exposing (Msg(UpdateSchedule), getSchedule)
-import Update.Movie as MovieUpdate exposing (Msg(StoreMovie), getMovie)
+import Update.Movie as MovieUpdate
+import Update.Review as ReviewUpdate
 
 
 type alias Model =
     { schedule : ScheduleUpdate.Model
     , movieList : MovieUpdate.Model
+    , reviews : ReviewUpdate.Model
     }
 
 
@@ -14,11 +16,12 @@ type Msg
     = No
     | ScheduleMsg ScheduleUpdate.Msg
     | MovieMsg MovieUpdate.Msg
+    | ReviewMsg ReviewUpdate.Msg
 
 
 initialModel : Model
 initialModel =
-    Model ScheduleUpdate.initialModel MovieUpdate.initialModel
+    Model ScheduleUpdate.initialModel MovieUpdate.initialModel ReviewUpdate.initialModel
 
 
 initialCmd : Cmd Msg
@@ -45,3 +48,10 @@ update msg model =
                     ScheduleUpdate.update scheduleMsg model.schedule
             in
                 { model | schedule = schedule } ! [ Cmd.map ScheduleMsg cmd ]
+
+        ReviewMsg reviewMsg ->
+            let
+                ( reviews, cmd ) =
+                    ReviewUpdate.update reviewMsg model.reviews
+            in
+                { model | reviews = reviews } ! [ Cmd.map ReviewMsg cmd ]

@@ -6526,327 +6526,6 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
-var _user$project$Model_Schedule$Schedule = F2(
-	function (a, b) {
-		return {date: a, movies: b};
-	});
-var _user$project$Model_Schedule$MovieValueObject = F4(
-	function (a, b, c, d) {
-		return {id: a, title: b, thumbnaiUrl: c, detailUrl: d};
-	});
-var _user$project$Model_Schedule$decodeModelDTO = A5(
-	_elm_lang$core$Json_Decode$map4,
-	_user$project$Model_Schedule$MovieValueObject,
-	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'thumbnail_url', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'detail_url', _elm_lang$core$Json_Decode$string));
-var _user$project$Model_Schedule$decodeSchedule = A3(
-	_elm_lang$core$Json_Decode$map2,
-	_user$project$Model_Schedule$Schedule,
-	A2(_elm_lang$core$Json_Decode$field, 'date', _elm_lang$core$Json_Decode$string),
-	A2(
-		_elm_lang$core$Json_Decode$field,
-		'movies',
-		_elm_lang$core$Json_Decode$list(_user$project$Model_Schedule$decodeModelDTO)));
-
-var _user$project$Update_Schedule$update = F2(
-	function (msg, model) {
-		var log = A2(_elm_lang$core$Debug$log, 'update', msg);
-		var _p0 = msg;
-		if (_p0.ctor === 'UpdateSchedule') {
-			var _p1 = _p0._0;
-			if (_p1.ctor === 'Ok') {
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Maybe$Just(_p1._0),
-					{ctor: '[]'});
-			} else {
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					{ctor: '[]'});
-			}
-		} else {
-			return A2(
-				_elm_lang$core$Platform_Cmd_ops['!'],
-				model,
-				{ctor: '[]'});
-		}
-	});
-var _user$project$Update_Schedule$initialModel = _elm_lang$core$Maybe$Nothing;
-var _user$project$Update_Schedule$MovieDetail = function (a) {
-	return {ctor: 'MovieDetail', _0: a};
-};
-var _user$project$Update_Schedule$UpdateSchedule = function (a) {
-	return {ctor: 'UpdateSchedule', _0: a};
-};
-var _user$project$Update_Schedule$getSchedule = function () {
-	var url = 'http://localhost:8080/schedule';
-	return A2(
-		_elm_lang$http$Http$send,
-		_user$project$Update_Schedule$UpdateSchedule,
-		A2(_elm_lang$http$Http$get, url, _user$project$Model_Schedule$decodeSchedule));
-}();
-
-var _user$project$Model_Review$Review = F2(
-	function (a, b) {
-		return {point: a, describe: b};
-	});
-
-var _user$project$Model_Movie$updateBase = F2(
-	function (movieVo, movie) {
-		return _elm_lang$core$Native_Utils.update(
-			movie,
-			{base: movieVo});
-	});
-var _user$project$Model_Movie$Movie = F6(
-	function (a, b, c, d, e, f) {
-		return {id: a, title: b, story: c, pageUrl: d, base: e, review: f};
-	});
-var _user$project$Model_Movie$decodeMovie = A2(
-	_elm_lang$core$Json_Decode$map,
-	function (fn) {
-		return A2(fn, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Maybe$Nothing);
-	},
-	A5(
-		_elm_lang$core$Json_Decode$map4,
-		_user$project$Model_Movie$Movie,
-		A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
-		A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string),
-		A2(_elm_lang$core$Json_Decode$field, 'story', _elm_lang$core$Json_Decode$string),
-		A2(_elm_lang$core$Json_Decode$field, 'page_url', _elm_lang$core$Json_Decode$string)));
-
-var _user$project$Update_Movie$storeReview = F2(
-	function (movie, review) {
-		var log2 = A2(_elm_lang$core$Debug$log, 'storeReview:review', review);
-		var log = A2(_elm_lang$core$Debug$log, 'storeReview:movie', movie);
-		return _elm_lang$core$Platform_Cmd$none;
-	});
-var _user$project$Update_Movie$editReview = F3(
-	function (editings, id, fn) {
-		return A3(
-			_elm_lang$core$Dict$update,
-			id,
-			_elm_lang$core$Maybe$map(
-				function (movie) {
-					return _elm_lang$core$Native_Utils.update(
-						movie,
-						{
-							review: _elm_lang$core$Maybe$Just(
-								A2(
-									_elm_lang$core$Maybe$withDefault,
-									fn(
-										A2(_user$project$Model_Review$Review, 0, '')),
-									A2(_elm_lang$core$Maybe$map, fn, movie.review)))
-						});
-				}),
-			editings);
-	});
-var _user$project$Update_Movie$editReviewPoint = F3(
-	function (editings, id, point) {
-		return A3(
-			_user$project$Update_Movie$editReview,
-			editings,
-			id,
-			function (review) {
-				return _elm_lang$core$Native_Utils.update(
-					review,
-					{point: point});
-			});
-	});
-var _user$project$Update_Movie$editReviewDescribe = F3(
-	function (editings, id, describe) {
-		return A3(
-			_user$project$Update_Movie$editReview,
-			editings,
-			id,
-			function (review) {
-				return _elm_lang$core$Native_Utils.update(
-					review,
-					{describe: describe});
-			});
-	});
-var _user$project$Update_Movie$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'None':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					{ctor: '[]'});
-			case 'StoreMovie':
-				var _p1 = _p0._0;
-				if (_p1.ctor === 'Ok') {
-					var _p2 = _p1._0;
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						A3(_elm_lang$core$Dict$insert, _p2.id, _p2, model),
-						{ctor: '[]'});
-				} else {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
-						{ctor: '[]'});
-				}
-			default:
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					A3(
-						_elm_lang$core$Dict$update,
-						_p0._0,
-						_elm_lang$core$Maybe$map(
-							function (movie) {
-								return _elm_lang$core$Native_Utils.update(
-									movie,
-									{
-										review: _elm_lang$core$Maybe$Just(_p0._1)
-									});
-							}),
-						model),
-					{ctor: '[]'});
-		}
-	});
-var _user$project$Update_Movie$initialModel = _elm_lang$core$Dict$empty;
-var _user$project$Update_Movie$None = {ctor: 'None'};
-var _user$project$Update_Movie$ReviewMovie = F2(
-	function (a, b) {
-		return {ctor: 'ReviewMovie', _0: a, _1: b};
-	});
-var _user$project$Update_Movie$StoreMovie = function (a) {
-	return {ctor: 'StoreMovie', _0: a};
-};
-var _user$project$Update_Movie$getMovie = F2(
-	function (id, movieVo) {
-		var url = A2(_elm_lang$core$Basics_ops['++'], 'http://localhost:8080/movie/', id);
-		return A2(
-			_elm_lang$http$Http$send,
-			function (_p3) {
-				return _user$project$Update_Movie$StoreMovie(
-					A2(
-						_elm_lang$core$Result$map,
-						_user$project$Model_Movie$updateBase(movieVo),
-						_p3));
-			},
-			A2(_elm_lang$http$Http$get, url, _user$project$Model_Movie$decodeMovie));
-	});
-
-var _user$project$Update_Main$Model = F2(
-	function (a, b) {
-		return {schedule: a, movieList: b};
-	});
-var _user$project$Update_Main$initialModel = A2(_user$project$Update_Main$Model, _user$project$Update_Schedule$initialModel, _user$project$Update_Movie$initialModel);
-var _user$project$Update_Main$MovieMsg = function (a) {
-	return {ctor: 'MovieMsg', _0: a};
-};
-var _user$project$Update_Main$ScheduleMsg = function (a) {
-	return {ctor: 'ScheduleMsg', _0: a};
-};
-var _user$project$Update_Main$initialCmd = A2(_elm_lang$core$Platform_Cmd$map, _user$project$Update_Main$ScheduleMsg, _user$project$Update_Schedule$getSchedule);
-var _user$project$Update_Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'No':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					{ctor: '[]'});
-			case 'MovieMsg':
-				var _p1 = A2(_user$project$Update_Movie$update, _p0._0, model.movieList);
-				var movieList = _p1._0;
-				var cmd = _p1._1;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{movieList: movieList}),
-					{
-						ctor: '::',
-						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Update_Main$MovieMsg, cmd),
-						_1: {ctor: '[]'}
-					});
-			default:
-				var _p2 = A2(_user$project$Update_Schedule$update, _p0._0, model.schedule);
-				var schedule = _p2._0;
-				var cmd = _p2._1;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{schedule: schedule}),
-					{
-						ctor: '::',
-						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Update_Main$ScheduleMsg, cmd),
-						_1: {ctor: '[]'}
-					});
-		}
-	});
-var _user$project$Update_Main$No = {ctor: 'No'};
-
-var _user$project$Navigation_Scene$ReviewPage = function (a) {
-	return {ctor: 'ReviewPage', _0: a};
-};
-var _user$project$Navigation_Scene$MovieDetailPage = F2(
-	function (a, b) {
-		return {ctor: 'MovieDetailPage', _0: a, _1: b};
-	});
-var _user$project$Navigation_Scene$SchedulePage = {ctor: 'SchedulePage'};
-
-var _user$project$Navigation_Navigator$initialModel = {
-	page: _user$project$Navigation_Scene$SchedulePage,
-	history: {ctor: '[]'}
-};
-var _user$project$Navigation_Navigator$Model = F2(
-	function (a, b) {
-		return {page: a, history: b};
-	});
-var _user$project$Navigation_Navigator$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'Back') {
-			return A2(
-				_elm_lang$core$Maybe$withDefault,
-				model,
-				A2(
-					_elm_lang$core$Maybe$map,
-					function (scene) {
-						return A2(
-							_user$project$Navigation_Navigator$Model,
-							scene,
-							A2(_elm_lang$core$List$drop, 1, model.history));
-					},
-					_elm_lang$core$List$head(model.history)));
-		} else {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{
-					page: _p0._0,
-					history: A2(
-						_elm_lang$core$Basics_ops['++'],
-						{
-							ctor: '::',
-							_0: model.page,
-							_1: {ctor: '[]'}
-						},
-						model.history)
-				});
-		}
-	});
-var _user$project$Navigation_Navigator$Scene = function (a) {
-	return {ctor: 'Scene', _0: a};
-};
-var _user$project$Navigation_Navigator$Back = {ctor: 'Back'};
-
-var _user$project$Msg$None = {ctor: 'None'};
-var _user$project$Msg$AppMsg = function (a) {
-	return {ctor: 'AppMsg', _0: a};
-};
-var _user$project$Msg$NavigatorMsg = function (a) {
-	return {ctor: 'NavigatorMsg', _0: a};
-};
-
 var _user$project$Native_NativeUi = (function () {
 
   var ReactNative = require('react-native');
@@ -7244,6 +6923,9 @@ var _user$project$Native_NativeUi = (function () {
   };
 }());
 
+var _user$project$NativeApi_Animated$decodeAnimatedValue = _elm_lang$core$Json_Decode$value;
+var _user$project$NativeApi_Animated$encodeAnimatedValue = _elm_lang$core$Basics$identity;
+
 var _user$project$NativeUi_Style$defaultTransform = {perspective: _elm_lang$core$Maybe$Nothing, rotate: _elm_lang$core$Maybe$Nothing, rotateX: _elm_lang$core$Maybe$Nothing, rotateY: _elm_lang$core$Maybe$Nothing, rotateZ: _elm_lang$core$Maybe$Nothing, scale: _elm_lang$core$Maybe$Nothing, scaleX: _elm_lang$core$Maybe$Nothing, scaleY: _elm_lang$core$Maybe$Nothing, translateX: _elm_lang$core$Maybe$Nothing, translateY: _elm_lang$core$Maybe$Nothing, skewX: _elm_lang$core$Maybe$Nothing, skewY: _elm_lang$core$Maybe$Nothing};
 var _user$project$NativeUi_Style$encodeValue = function (value) {
 	var _p0 = value;
@@ -7611,6 +7293,1129 @@ var _user$project$NativeUi$node = _user$project$Native_NativeUi.node;
 var _user$project$NativeUi$Node = {ctor: 'Node'};
 var _user$project$NativeUi$Property = {ctor: 'Property'};
 
+var _user$project$NativeUi_NavigationExperimental$progress = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'progress',
+		_user$project$NativeApi_Animated$encodeAnimatedValue(val));
+};
+var _user$project$NativeUi_NavigationExperimental$position = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'position',
+		_user$project$NativeApi_Animated$encodeAnimatedValue(val));
+};
+var _user$project$NativeUi_NavigationExperimental$encodeRoute = function (route) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'key',
+				_1: _elm_lang$core$Json_Encode$string(route.key)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'title',
+					_1: A2(
+						_elm_lang$core$Maybe$withDefault,
+						_elm_lang$core$Json_Encode$null,
+						A2(_elm_lang$core$Maybe$map, _elm_lang$core$Json_Encode$string, route.title))
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$NativeUi_NavigationExperimental$encodeNavigationScene = function (scene) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'index',
+				_1: _elm_lang$core$Json_Encode$int(scene.index)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'isActive',
+					_1: _elm_lang$core$Json_Encode$bool(scene.isActive)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'isStale',
+						_1: _elm_lang$core$Json_Encode$bool(scene.isStale)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'key',
+							_1: _elm_lang$core$Json_Encode$string(scene.key)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'route',
+								_1: _user$project$NativeUi_NavigationExperimental$encodeRoute(scene.route)
+							},
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$NativeUi_NavigationExperimental$scene = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'scene',
+		_user$project$NativeUi_NavigationExperimental$encodeNavigationScene(val));
+};
+var _user$project$NativeUi_NavigationExperimental$scenes = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'scenes',
+		_elm_lang$core$Json_Encode$list(
+			A2(_elm_lang$core$List$map, _user$project$NativeUi_NavigationExperimental$encodeNavigationScene, val)));
+};
+var _user$project$NativeUi_NavigationExperimental$encodeNavigationState = function (state) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'index',
+				_1: _elm_lang$core$Json_Encode$int(state.index)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'routes',
+					_1: _elm_lang$core$Json_Encode$list(
+						A2(_elm_lang$core$List$map, _user$project$NativeUi_NavigationExperimental$encodeRoute, state.routes))
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$NativeUi_NavigationExperimental$navigationState = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'navigationState',
+		_user$project$NativeUi_NavigationExperimental$encodeNavigationState(val));
+};
+var _user$project$NativeUi_NavigationExperimental$encodeNavigationLayout = function (layout) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'height',
+				_1: _user$project$NativeApi_Animated$encodeAnimatedValue(layout.height)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'initHeight',
+					_1: _elm_lang$core$Json_Encode$float(layout.initHeight)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'initWidth',
+						_1: _elm_lang$core$Json_Encode$float(layout.initWidth)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'isMeasured',
+							_1: _elm_lang$core$Json_Encode$bool(layout.isMeasured)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'width',
+								_1: _user$project$NativeApi_Animated$encodeAnimatedValue(layout.width)
+							},
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$NativeUi_NavigationExperimental$encodeNavigationSceneRenderer = function (props) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'layout',
+				_1: _user$project$NativeUi_NavigationExperimental$encodeNavigationLayout(props.layout)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'navigationState',
+					_1: _user$project$NativeUi_NavigationExperimental$encodeNavigationState(props.navigationState)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'position',
+						_1: _user$project$NativeApi_Animated$encodeAnimatedValue(props.position)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'progress',
+							_1: _user$project$NativeApi_Animated$encodeAnimatedValue(props.progress)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'scene',
+								_1: _user$project$NativeUi_NavigationExperimental$encodeNavigationScene(props.scene)
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'scenes',
+									_1: _elm_lang$core$Json_Encode$list(
+										A2(_elm_lang$core$List$map, _user$project$NativeUi_NavigationExperimental$encodeNavigationScene, props.scenes))
+								},
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$NativeUi_NavigationExperimental$layout = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'layout',
+		_user$project$NativeUi_NavigationExperimental$encodeNavigationLayout(val));
+};
+var _user$project$NativeUi_NavigationExperimental$navigationSceneRendererToPropertyList = function (props) {
+	return {
+		ctor: '::',
+		_0: _user$project$NativeUi_NavigationExperimental$layout(props.layout),
+		_1: {
+			ctor: '::',
+			_0: _user$project$NativeUi_NavigationExperimental$navigationState(props.navigationState),
+			_1: {
+				ctor: '::',
+				_0: _user$project$NativeUi_NavigationExperimental$position(props.position),
+				_1: {
+					ctor: '::',
+					_0: _user$project$NativeUi_NavigationExperimental$progress(props.progress),
+					_1: {
+						ctor: '::',
+						_0: _user$project$NativeUi_NavigationExperimental$scene(props.scene),
+						_1: {
+							ctor: '::',
+							_0: _user$project$NativeUi_NavigationExperimental$scenes(props.scenes),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	};
+};
+var _user$project$NativeUi_NavigationExperimental$NavigationLayout = F5(
+	function (a, b, c, d, e) {
+		return {height: a, initHeight: b, initWidth: c, isMeasured: d, width: e};
+	});
+var _user$project$NativeUi_NavigationExperimental$decodeLayout = A6(
+	_elm_lang$core$Json_Decode$map5,
+	_user$project$NativeUi_NavigationExperimental$NavigationLayout,
+	A2(_elm_lang$core$Json_Decode$field, 'height', _user$project$NativeApi_Animated$decodeAnimatedValue),
+	A2(_elm_lang$core$Json_Decode$field, 'initHeight', _elm_lang$core$Json_Decode$float),
+	A2(_elm_lang$core$Json_Decode$field, 'initWidth', _elm_lang$core$Json_Decode$float),
+	A2(_elm_lang$core$Json_Decode$field, 'isMeasured', _elm_lang$core$Json_Decode$bool),
+	A2(_elm_lang$core$Json_Decode$field, 'width', _user$project$NativeApi_Animated$decodeAnimatedValue));
+var _user$project$NativeUi_NavigationExperimental$NavigationRoute = F2(
+	function (a, b) {
+		return {key: a, title: b};
+	});
+var _user$project$NativeUi_NavigationExperimental$decodeRoute = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$NativeUi_NavigationExperimental$NavigationRoute,
+	A2(_elm_lang$core$Json_Decode$field, 'key', _elm_lang$core$Json_Decode$string),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string)));
+var _user$project$NativeUi_NavigationExperimental$NavigationScene = F5(
+	function (a, b, c, d, e) {
+		return {index: a, isActive: b, isStale: c, key: d, route: e};
+	});
+var _user$project$NativeUi_NavigationExperimental$decodeNavigationScene = A6(
+	_elm_lang$core$Json_Decode$map5,
+	_user$project$NativeUi_NavigationExperimental$NavigationScene,
+	A2(_elm_lang$core$Json_Decode$field, 'index', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'isActive', _elm_lang$core$Json_Decode$bool),
+	A2(_elm_lang$core$Json_Decode$field, 'isStale', _elm_lang$core$Json_Decode$bool),
+	A2(_elm_lang$core$Json_Decode$field, 'key', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'route', _user$project$NativeUi_NavigationExperimental$decodeRoute));
+var _user$project$NativeUi_NavigationExperimental$NavigationState = F2(
+	function (a, b) {
+		return {index: a, routes: b};
+	});
+var _user$project$NativeUi_NavigationExperimental$decodeNavigationState = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$NativeUi_NavigationExperimental$NavigationState,
+	A2(_elm_lang$core$Json_Decode$field, 'index', _elm_lang$core$Json_Decode$int),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'routes',
+		_elm_lang$core$Json_Decode$list(_user$project$NativeUi_NavigationExperimental$decodeRoute)));
+var _user$project$NativeUi_NavigationExperimental$NavigationSceneRenderer = F6(
+	function (a, b, c, d, e, f) {
+		return {layout: a, navigationState: b, position: c, progress: d, scene: e, scenes: f};
+	});
+var _user$project$NativeUi_NavigationExperimental$decodeNavigationSceneRenderer = A7(
+	_elm_lang$core$Json_Decode$map6,
+	_user$project$NativeUi_NavigationExperimental$NavigationSceneRenderer,
+	A2(_elm_lang$core$Json_Decode$field, 'layout', _user$project$NativeUi_NavigationExperimental$decodeLayout),
+	A2(_elm_lang$core$Json_Decode$field, 'navigationState', _user$project$NativeUi_NavigationExperimental$decodeNavigationState),
+	A2(_elm_lang$core$Json_Decode$field, 'position', _user$project$NativeApi_Animated$decodeAnimatedValue),
+	A2(_elm_lang$core$Json_Decode$field, 'progress', _user$project$NativeApi_Animated$decodeAnimatedValue),
+	A2(_elm_lang$core$Json_Decode$field, 'scene', _user$project$NativeUi_NavigationExperimental$decodeNavigationScene),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'scenes',
+		_elm_lang$core$Json_Decode$list(_user$project$NativeUi_NavigationExperimental$decodeNavigationScene)));
+var _user$project$NativeUi_NavigationExperimental$renderHeader = A2(_user$project$NativeUi$renderProperty, 'renderHeader', _user$project$NativeUi_NavigationExperimental$decodeNavigationSceneRenderer);
+var _user$project$NativeUi_NavigationExperimental$renderScene = A2(_user$project$NativeUi$renderProperty, 'renderScene', _user$project$NativeUi_NavigationExperimental$decodeNavigationSceneRenderer);
+var _user$project$NativeUi_NavigationExperimental$renderTitleComponent = A2(_user$project$NativeUi$renderProperty, 'renderTitleComponent', _user$project$NativeUi_NavigationExperimental$decodeNavigationSceneRenderer);
+
+var _user$project$Model_Schedule$Schedule = F2(
+	function (a, b) {
+		return {date: a, movies: b};
+	});
+var _user$project$Model_Schedule$MovieValueObject = F4(
+	function (a, b, c, d) {
+		return {id: a, title: b, thumbnaiUrl: c, detailUrl: d};
+	});
+var _user$project$Model_Schedule$decodeModelDTO = A5(
+	_elm_lang$core$Json_Decode$map4,
+	_user$project$Model_Schedule$MovieValueObject,
+	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'thumbnail_url', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'detail_url', _elm_lang$core$Json_Decode$string));
+var _user$project$Model_Schedule$decodeSchedule = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Model_Schedule$Schedule,
+	A2(_elm_lang$core$Json_Decode$field, 'date', _elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'movies',
+		_elm_lang$core$Json_Decode$list(_user$project$Model_Schedule$decodeModelDTO)));
+
+var _user$project$Model_Movie$updateBase = F2(
+	function (movieVo, movie) {
+		return _elm_lang$core$Native_Utils.update(
+			movie,
+			{base: movieVo});
+	});
+var _user$project$Model_Movie$Movie = F5(
+	function (a, b, c, d, e) {
+		return {id: a, title: b, story: c, pageUrl: d, base: e};
+	});
+var _user$project$Model_Movie$decodeMovie = A2(
+	_elm_lang$core$Json_Decode$map,
+	function (fn) {
+		return fn(_elm_lang$core$Maybe$Nothing);
+	},
+	A5(
+		_elm_lang$core$Json_Decode$map4,
+		_user$project$Model_Movie$Movie,
+		A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
+		A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string),
+		A2(_elm_lang$core$Json_Decode$field, 'story', _elm_lang$core$Json_Decode$string),
+		A2(_elm_lang$core$Json_Decode$field, 'page_url', _elm_lang$core$Json_Decode$string)));
+
+var _user$project$NativeApi_NavigationStateUtil$reset = F2(
+	function (maybeIndex, routes) {
+		var maxIndex = _elm_lang$core$List$length(routes) - 1;
+		var index = A2(_elm_lang$core$Maybe$withDefault, maxIndex, maybeIndex);
+		return {index: index, routes: routes};
+	});
+var _user$project$NativeApi_NavigationStateUtil$substitute = F3(
+	function (old, $new, value) {
+		return _elm_lang$core$Native_Utils.eq(old.key, value.key) ? $new : value;
+	});
+var _user$project$NativeApi_NavigationStateUtil$jumpToIndex = F2(
+	function (index, state) {
+		return _elm_lang$core$Native_Utils.eq(index, state.index) ? state : ((_elm_lang$core$Native_Utils.cmp(
+			index + 1,
+			_elm_lang$core$List$length(state.routes)) > 0) ? _elm_lang$core$Native_Utils.crash(
+			'NativeApi.NavigationStateUtil',
+			{
+				start: {line: 86, column: 9},
+				end: {line: 86, column: 20}
+			})(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'invalid index ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(index),
+					' to jump to'))) : _elm_lang$core$Native_Utils.update(
+			state,
+			{index: index}));
+	});
+var _user$project$NativeApi_NavigationStateUtil$push = F2(
+	function (route, state) {
+		var exists = A2(
+			_elm_lang$core$List$any,
+			function (x) {
+				return _elm_lang$core$Native_Utils.eq(x.key, route.key);
+			},
+			state.routes);
+		if (exists) {
+			return _elm_lang$core$Native_Utils.crash(
+				'NativeApi.NavigationStateUtil',
+				{
+					start: {line: 69, column: 13},
+					end: {line: 69, column: 24}
+				})(
+				A2(_elm_lang$core$Basics_ops['++'], 'should not push route with duplicated key ', route.key));
+		} else {
+			var routes = A2(
+				_elm_lang$core$List$append,
+				state.routes,
+				{
+					ctor: '::',
+					_0: route,
+					_1: {ctor: '[]'}
+				});
+			return _elm_lang$core$Native_Utils.update(
+				state,
+				{
+					index: _elm_lang$core$List$length(routes) - 1,
+					routes: routes
+				});
+		}
+	});
+var _user$project$NativeApi_NavigationStateUtil$pop = function (state) {
+	var _p0 = _elm_lang$core$List$reverse(state.routes);
+	if (_p0.ctor === '[]') {
+		return state;
+	} else {
+		if (_p0._1.ctor === '[]') {
+			return state;
+		} else {
+			var routes = _elm_lang$core$List$reverse(_p0._1);
+			return _elm_lang$core$Native_Utils.update(
+				state,
+				{
+					index: _elm_lang$core$List$length(routes) - 1,
+					routes: routes
+				});
+		}
+	}
+};
+var _user$project$NativeApi_NavigationStateUtil$has = F2(
+	function (route, state) {
+		return !_elm_lang$core$List$isEmpty(
+			A2(
+				_elm_lang$core$List$filter,
+				function (x) {
+					return _elm_lang$core$Native_Utils.eq(x.key, route.key);
+				},
+				state.routes));
+	});
+var _user$project$NativeApi_NavigationStateUtil$indexOf = F2(
+	function (key, state) {
+		return A2(
+			_elm_lang$core$Maybe$map,
+			_elm_lang$core$Tuple$first,
+			_elm_lang$core$List$head(
+				A2(
+					_elm_lang$core$List$filter,
+					function (_p1) {
+						var _p2 = _p1;
+						return _elm_lang$core$Native_Utils.eq(_p2._1.key, key);
+					},
+					A2(
+						_elm_lang$core$List$indexedMap,
+						F2(
+							function (i, r) {
+								return {ctor: '_Tuple2', _0: i, _1: r};
+							}),
+						state.routes))));
+	});
+var _user$project$NativeApi_NavigationStateUtil$jumpTo = F2(
+	function (key, state) {
+		var _p3 = A2(_user$project$NativeApi_NavigationStateUtil$indexOf, key, state);
+		if (_p3.ctor === 'Nothing') {
+			return _elm_lang$core$Native_Utils.crashCase(
+				'NativeApi.NavigationStateUtil',
+				{
+					start: {line: 93, column: 5},
+					end: {line: 98, column: 36}
+				},
+				_p3)(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'invalid key \'',
+					A2(_elm_lang$core$Basics_ops['++'], key, '\' to jump to')));
+		} else {
+			return A2(_user$project$NativeApi_NavigationStateUtil$jumpToIndex, _p3._0, state);
+		}
+	});
+var _user$project$NativeApi_NavigationStateUtil$get = F2(
+	function (key, state) {
+		return _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				function (r) {
+					return _elm_lang$core$Native_Utils.eq(r.key, key);
+				},
+				state.routes));
+	});
+var _user$project$NativeApi_NavigationStateUtil$getRoute = F2(
+	function (index, state) {
+		return A2(
+			_elm_lang$core$Maybe$map,
+			_elm_lang$core$Tuple$second,
+			_elm_lang$core$List$head(
+				A2(
+					_elm_lang$core$List$filter,
+					function (_p5) {
+						var _p6 = _p5;
+						return _elm_lang$core$Native_Utils.eq(_p6._0, index);
+					},
+					A2(
+						_elm_lang$core$List$indexedMap,
+						F2(
+							function (i, r) {
+								return {ctor: '_Tuple2', _0: i, _1: r};
+							}),
+						state.routes))));
+	});
+var _user$project$NativeApi_NavigationStateUtil$back = function (state) {
+	var _p7 = A2(_user$project$NativeApi_NavigationStateUtil$getRoute, state.index - 1, state);
+	if (_p7.ctor === 'Nothing') {
+		return state;
+	} else {
+		return A2(_user$project$NativeApi_NavigationStateUtil$jumpToIndex, state.index - 1, state);
+	}
+};
+var _user$project$NativeApi_NavigationStateUtil$forward = function (state) {
+	var _p8 = A2(_user$project$NativeApi_NavigationStateUtil$getRoute, state.index + 1, state);
+	if (_p8.ctor === 'Nothing') {
+		return state;
+	} else {
+		return A2(_user$project$NativeApi_NavigationStateUtil$jumpToIndex, state.index + 1, state);
+	}
+};
+var _user$project$NativeApi_NavigationStateUtil$replaceAtIndex = F3(
+	function (index, route, state) {
+		var maybeOriginal = A2(_user$project$NativeApi_NavigationStateUtil$getRoute, index, state);
+		var _p9 = maybeOriginal;
+		if (_p9.ctor === 'Nothing') {
+			return _elm_lang$core$Native_Utils.crashCase(
+				'NativeApi.NavigationStateUtil',
+				{
+					start: {line: 137, column: 9},
+					end: {line: 145, column: 106}
+				},
+				_p9)(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'invalid index ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(index),
+						A2(_elm_lang$core$Basics_ops['++'], ' for replacing route ', route.key))));
+		} else {
+			var _p11 = _p9._0;
+			return _elm_lang$core$Native_Utils.eq(_p11, route) ? _elm_lang$core$Native_Utils.update(
+				state,
+				{index: index}) : _elm_lang$core$Native_Utils.update(
+				state,
+				{
+					index: index,
+					routes: A2(
+						_elm_lang$core$List$map,
+						A2(_user$project$NativeApi_NavigationStateUtil$substitute, _p11, route),
+						state.routes)
+				});
+		}
+	});
+var _user$project$NativeApi_NavigationStateUtil$replaceAt = F3(
+	function (key, route, state) {
+		var _p12 = A2(_user$project$NativeApi_NavigationStateUtil$indexOf, key, state);
+		if (_p12.ctor === 'Nothing') {
+			return _elm_lang$core$Native_Utils.crashCase(
+				'NativeApi.NavigationStateUtil',
+				{
+					start: {line: 123, column: 5},
+					end: {line: 128, column: 45}
+				},
+				_p12)(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'invalid key \'',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						key,
+						A2(_elm_lang$core$Basics_ops['++'], '\' for replacing route ', route.key))));
+		} else {
+			return A3(_user$project$NativeApi_NavigationStateUtil$replaceAtIndex, _p12._0, route, state);
+		}
+	});
+
+var _user$project$Update_Schedule$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		var _p1 = _p0._0;
+		if (_p1.ctor === 'Ok') {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				_elm_lang$core$Maybe$Just(_p1._0),
+				{ctor: '[]'});
+		} else {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				model,
+				{ctor: '[]'});
+		}
+	});
+var _user$project$Update_Schedule$initialModel = _elm_lang$core$Maybe$Nothing;
+var _user$project$Update_Schedule$UpdateSchedule = function (a) {
+	return {ctor: 'UpdateSchedule', _0: a};
+};
+var _user$project$Update_Schedule$getSchedule = function () {
+	var url = 'http://localhost:8080/schedule';
+	return A2(
+		_elm_lang$http$Http$send,
+		_user$project$Update_Schedule$UpdateSchedule,
+		A2(_elm_lang$http$Http$get, url, _user$project$Model_Schedule$decodeSchedule));
+}();
+
+var _user$project$Model_Review$descriveValidation = function (review) {
+	return (_elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$String$length(review.describe),
+		0) > 0) ? _elm_lang$core$Result$Ok(review) : _elm_lang$core$Result$Err('describe err');
+};
+var _user$project$Model_Review$pointValidation = function (review) {
+	return (_elm_lang$core$Native_Utils.cmp(review.point, 0) > 0) ? _elm_lang$core$Result$Ok(review) : _elm_lang$core$Result$Err('point err');
+};
+var _user$project$Model_Review$validation = function (review) {
+	return A2(
+		_elm_lang$core$Result$andThen,
+		_user$project$Model_Review$descriveValidation,
+		_user$project$Model_Review$pointValidation(review));
+};
+var _user$project$Model_Review$setId = F2(
+	function (id, review) {
+		return _elm_lang$core$Native_Utils.update(
+			review,
+			{movieId: id});
+	});
+var _user$project$Model_Review$Review = F3(
+	function (a, b, c) {
+		return {movieId: a, point: b, describe: c};
+	});
+
+var _user$project$Update_Movie$storeReview = F2(
+	function (movie, review) {
+		return _elm_lang$core$Platform_Cmd$none;
+	});
+var _user$project$Update_Movie$initialModel = _elm_lang$core$Dict$empty;
+var _user$project$Update_Movie$None = {ctor: 'None'};
+var _user$project$Update_Movie$GetMovie = function (a) {
+	return {ctor: 'GetMovie', _0: a};
+};
+var _user$project$Update_Movie$StoreMovie = function (a) {
+	return {ctor: 'StoreMovie', _0: a};
+};
+var _user$project$Update_Movie$getMovie = F2(
+	function (id, movieVo) {
+		var url = A2(_elm_lang$core$Basics_ops['++'], 'http://localhost:8080/movie/', id);
+		return A2(
+			_elm_lang$http$Http$send,
+			function (_p0) {
+				return _user$project$Update_Movie$StoreMovie(
+					A2(
+						_elm_lang$core$Result$map,
+						_user$project$Model_Movie$updateBase(movieVo),
+						_p0));
+			},
+			A2(_elm_lang$http$Http$get, url, _user$project$Model_Movie$decodeMovie));
+	});
+var _user$project$Update_Movie$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'None':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+			case 'StoreMovie':
+				var _p2 = _p1._0;
+				if (_p2.ctor === 'Ok') {
+					var _p3 = _p2._0;
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						A3(_elm_lang$core$Dict$insert, _p3.id, _p3, model),
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				}
+			default:
+				var _p4 = _p1._0;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{
+						ctor: '::',
+						_0: A2(
+							_user$project$Update_Movie$getMovie,
+							_p4.id,
+							_elm_lang$core$Maybe$Just(_p4)),
+						_1: {ctor: '[]'}
+					});
+		}
+	});
+
+var _user$project$Update_Review$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		if (_p0.ctor === 'StoreReview') {
+			var _p1 = _p0._0;
+			return A2(
+				_elm_lang$core$Debug$log,
+				'update review',
+				function (model) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				}(
+					A3(_elm_lang$core$Dict$insert, _p1.movieId, _p1, model)));
+		} else {
+			return A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				model,
+				{ctor: '[]'});
+		}
+	});
+var _user$project$Update_Review$initialModel = _elm_lang$core$Dict$empty;
+var _user$project$Update_Review$NoMsg = {ctor: 'NoMsg'};
+var _user$project$Update_Review$StoreReview = function (a) {
+	return {ctor: 'StoreReview', _0: a};
+};
+
+var _user$project$Update_Main$Model = F3(
+	function (a, b, c) {
+		return {schedule: a, movieList: b, reviews: c};
+	});
+var _user$project$Update_Main$initialModel = A3(_user$project$Update_Main$Model, _user$project$Update_Schedule$initialModel, _user$project$Update_Movie$initialModel, _user$project$Update_Review$initialModel);
+var _user$project$Update_Main$ReviewMsg = function (a) {
+	return {ctor: 'ReviewMsg', _0: a};
+};
+var _user$project$Update_Main$MovieMsg = function (a) {
+	return {ctor: 'MovieMsg', _0: a};
+};
+var _user$project$Update_Main$ScheduleMsg = function (a) {
+	return {ctor: 'ScheduleMsg', _0: a};
+};
+var _user$project$Update_Main$initialCmd = A2(_elm_lang$core$Platform_Cmd$map, _user$project$Update_Main$ScheduleMsg, _user$project$Update_Schedule$getSchedule);
+var _user$project$Update_Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'No':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+			case 'MovieMsg':
+				var _p1 = A2(_user$project$Update_Movie$update, _p0._0, model.movieList);
+				var movieList = _p1._0;
+				var cmd = _p1._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{movieList: movieList}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Update_Main$MovieMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+			case 'ScheduleMsg':
+				var _p2 = A2(_user$project$Update_Schedule$update, _p0._0, model.schedule);
+				var schedule = _p2._0;
+				var cmd = _p2._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{schedule: schedule}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Update_Main$ScheduleMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+			default:
+				var _p3 = A2(_user$project$Update_Review$update, _p0._0, model.reviews);
+				var reviews = _p3._0;
+				var cmd = _p3._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{reviews: reviews}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Update_Main$ReviewMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+		}
+	});
+var _user$project$Update_Main$No = {ctor: 'No'};
+
+var _user$project$View_ReviewComponent_Model$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'EditDescribe':
+				return function (model) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				}(
+					A2(
+						_elm_lang$core$Maybe$withDefault,
+						model,
+						A2(
+							_elm_lang$core$Maybe$map,
+							function (movieId) {
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										editingReview: A3(_user$project$Model_Review$Review, movieId, model.editingReview.point, _p0._0)
+									});
+							},
+							model.movieId)));
+			case 'EditPoint':
+				return function (model) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				}(
+					A2(
+						_elm_lang$core$Maybe$withDefault,
+						model,
+						A2(
+							_elm_lang$core$Maybe$map,
+							function (movieId) {
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										editingReview: A3(_user$project$Model_Review$Review, movieId, _p0._0, model.editingReview.describe)
+									});
+							},
+							model.movieId)));
+			case 'SubmitReview':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+		}
+	});
+var _user$project$View_ReviewComponent_Model$Model = F3(
+	function (a, b, c) {
+		return {movieId: a, editingReview: b, valid: c};
+	});
+var _user$project$View_ReviewComponent_Model$initialModel = function (id) {
+	return A3(
+		_user$project$View_ReviewComponent_Model$Model,
+		_elm_lang$core$Maybe$Just(id),
+		A3(_user$project$Model_Review$Review, id, 0, ''),
+		_elm_lang$core$Maybe$Nothing);
+};
+var _user$project$View_ReviewComponent_Model$init = A3(
+	_user$project$View_ReviewComponent_Model$Model,
+	_elm_lang$core$Maybe$Nothing,
+	A3(_user$project$Model_Review$Review, '', 0, ''),
+	_elm_lang$core$Maybe$Nothing);
+var _user$project$View_ReviewComponent_Model$NoMsg = {ctor: 'NoMsg'};
+var _user$project$View_ReviewComponent_Model$SubmitReview = F2(
+	function (a, b) {
+		return {ctor: 'SubmitReview', _0: a, _1: b};
+	});
+var _user$project$View_ReviewComponent_Model$EditPoint = function (a) {
+	return {ctor: 'EditPoint', _0: a};
+};
+var _user$project$View_ReviewComponent_Model$EditDescribe = function (a) {
+	return {ctor: 'EditDescribe', _0: a};
+};
+
+var _user$project$Navigation_ReviewScene$update = F2(
+	function (msg, model) {
+		var _p0 = A2(_user$project$View_ReviewComponent_Model$update, msg, model.reviewComponent);
+		var reviewComponent = _p0._0;
+		var cmd = _p0._1;
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{reviewComponent: reviewComponent}),
+			{
+				ctor: '::',
+				_0: cmd,
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Navigation_ReviewScene$setMovie = F2(
+	function (movie, model) {
+		var reviewComponent = model.reviewComponent;
+		var updatedReviewComponent = _elm_lang$core$Native_Utils.update(
+			reviewComponent,
+			{
+				movieId: _elm_lang$core$Maybe$Just(movie.id)
+			});
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				movie: _elm_lang$core$Maybe$Just(movie),
+				reviewComponent: updatedReviewComponent
+			});
+	});
+var _user$project$Navigation_ReviewScene$setReview = F2(
+	function (review, model) {
+		var reviewComponent = model.reviewComponent;
+		var updatedReviewComponent = _elm_lang$core$Native_Utils.update(
+			reviewComponent,
+			{editingReview: review});
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{reviewComponent: updatedReviewComponent});
+	});
+var _user$project$Navigation_ReviewScene$Model = F3(
+	function (a, b, c) {
+		return {movie: a, review: b, reviewComponent: c};
+	});
+var _user$project$Navigation_ReviewScene$initialReviewSceneModel = A3(
+	_user$project$Navigation_ReviewScene$Model,
+	_elm_lang$core$Maybe$Nothing,
+	A3(_user$project$Model_Review$Review, '', 0, ''),
+	_user$project$View_ReviewComponent_Model$init);
+
+var _user$project$Navigation_Navigator$initialModel = {
+	navigator: {
+		index: 0,
+		routes: {
+			ctor: '::',
+			_0: {key: 'schedule', title: _elm_lang$core$Maybe$Nothing},
+			_1: {ctor: '[]'}
+		}
+	},
+	appModel: _user$project$Update_Main$initialModel,
+	movieSceneModel: _elm_lang$core$Maybe$Nothing,
+	reviewSceneModel: _user$project$Navigation_ReviewScene$initialReviewSceneModel
+};
+var _user$project$Navigation_Navigator$Model = F4(
+	function (a, b, c, d) {
+		return {navigator: a, appModel: b, movieSceneModel: c, reviewSceneModel: d};
+	});
+var _user$project$Navigation_Navigator$ReviewSceneMsg = function (a) {
+	return {ctor: 'ReviewSceneMsg', _0: a};
+};
+var _user$project$Navigation_Navigator$CombineMsg = function (a) {
+	return {ctor: 'CombineMsg', _0: a};
+};
+var _user$project$Navigation_Navigator$AppMsg = function (a) {
+	return {ctor: 'AppMsg', _0: a};
+};
+var _user$project$Navigation_Navigator$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'Jump':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							navigator: A2(_user$project$NativeApi_NavigationStateUtil$jumpTo, _p0._0, model.navigator)
+						}),
+					{ctor: '[]'});
+			case 'Pop':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							navigator: _user$project$NativeApi_NavigationStateUtil$pop(model.navigator)
+						}),
+					{ctor: '[]'});
+			case 'PushReviewedList':
+				var route = {
+					key: 'reviewed',
+					title: _elm_lang$core$Maybe$Just('reviews')
+				};
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							navigator: A2(_user$project$NativeApi_NavigationStateUtil$push, route, model.navigator)
+						}),
+					{ctor: '[]'});
+			case 'PushMovieDetail':
+				var _p1 = _p0._0;
+				var route = {
+					key: 'movie',
+					title: _elm_lang$core$Maybe$Just(_p1.title)
+				};
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							navigator: A2(_user$project$NativeApi_NavigationStateUtil$push, route, model.navigator),
+							movieSceneModel: _elm_lang$core$Maybe$Just(_p1.id)
+						}),
+					{ctor: '[]'});
+			case 'PushReviewScene':
+				var _p2 = _p0._0;
+				var updatedReviewSceneModel = function (sceneModel) {
+					return A2(
+						_elm_lang$core$Maybe$withDefault,
+						sceneModel,
+						A2(
+							_elm_lang$core$Maybe$map,
+							function (review) {
+								return A2(_user$project$Navigation_ReviewScene$setReview, review, sceneModel);
+							},
+							A2(_elm_lang$core$Dict$get, _p2.id, model.appModel.reviews)));
+				}(
+					A2(_user$project$Navigation_ReviewScene$setMovie, _p2, _user$project$Navigation_ReviewScene$initialReviewSceneModel));
+				var route = {
+					key: 'review',
+					title: _elm_lang$core$Maybe$Just(_p2.title)
+				};
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							navigator: A2(_user$project$NativeApi_NavigationStateUtil$push, route, model.navigator),
+							reviewSceneModel: updatedReviewSceneModel
+						}),
+					{ctor: '[]'});
+			case 'AppMsg':
+				var _p3 = A2(_user$project$Update_Main$update, _p0._0, model.appModel);
+				var appModel = _p3._0;
+				var cmd = _p3._1;
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{appModel: appModel}),
+					{
+						ctor: '::',
+						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Navigation_Navigator$AppMsg, cmd),
+						_1: {ctor: '[]'}
+					});
+			case 'CombineMsg':
+				var reduceMsg = F2(
+					function (msg, _p4) {
+						var _p5 = _p4;
+						var _p6 = A2(_user$project$Navigation_Navigator$update, msg, _p5._0);
+						var nextModel = _p6._0;
+						var appendCmd = _p6._1;
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							nextModel,
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								{
+									ctor: '::',
+									_0: appendCmd,
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _p5._1,
+									_1: {ctor: '[]'}
+								}));
+					});
+				return A3(
+					_elm_lang$core$List$foldr,
+					reduceMsg,
+					{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none},
+					_p0._0);
+			case 'ReviewSceneMsg':
+				var _p7 = A2(_user$project$Navigation_ReviewScene$update, _p0._0, model.reviewSceneModel);
+				var sceneModel = _p7._0;
+				var cmd = _p7._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{reviewSceneModel: sceneModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Navigation_Navigator$ReviewSceneMsg, cmd)
+				};
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+		}
+	});
+var _user$project$Navigation_Navigator$PushMovieDetail = function (a) {
+	return {ctor: 'PushMovieDetail', _0: a};
+};
+var _user$project$Navigation_Navigator$PushReviewScene = function (a) {
+	return {ctor: 'PushReviewScene', _0: a};
+};
+var _user$project$Navigation_Navigator$Pop = {ctor: 'Pop'};
+var _user$project$Navigation_Navigator$None = {ctor: 'None'};
+var _user$project$Navigation_Navigator$PushReviewedList = {ctor: 'PushReviewedList'};
+var _user$project$Navigation_Navigator$Jump = function (a) {
+	return {ctor: 'Jump', _0: a};
+};
+var _user$project$Navigation_Navigator$Exit = {ctor: 'Exit'};
+
 var _user$project$NativeUi_Elements$navigationHeaderTitle = A3(_user$project$NativeUi$customNode, 'NavigationHeaderTitle', 'NavigationHeaderTitle', _elm_lang$core$Maybe$Nothing);
 var _user$project$NativeUi_Elements$navigationHeader = A3(_user$project$NativeUi$customNode, 'NavigationHeader', 'NavigationHeader', _elm_lang$core$Maybe$Nothing);
 var _user$project$NativeUi_Elements$navigationCardStack = A3(_user$project$NativeUi$customNode, 'NavigationCardStack', 'NavigationCardStack', _elm_lang$core$Maybe$Nothing);
@@ -7633,6 +8438,73 @@ var _user$project$NativeUi_Elements$mapView = _user$project$NativeUi$node('MapVi
 var _user$project$NativeUi_Elements$activityIndicator = _user$project$NativeUi$node('ActivityIndicator');
 var _user$project$NativeUi_Elements$image = _user$project$NativeUi$node('Image');
 var _user$project$NativeUi_Elements$text = _user$project$NativeUi$node('Text');
+
+var _user$project$NativeUi_Events$onChangeText = function (tagger) {
+	return A2(
+		_user$project$NativeUi$on,
+		'ChangeText',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$core$Json_Decode$string));
+};
+var _user$project$NativeUi_Events$onSlidingComplete = function (tagger) {
+	return A2(
+		_user$project$NativeUi$on,
+		'SlidingComplete',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$core$Json_Decode$float));
+};
+var _user$project$NativeUi_Events$onPickerValueChange = function (tagger) {
+	return A2(
+		_user$project$NativeUi$on,
+		'PickerValueChange',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$core$Json_Decode$string));
+};
+var _user$project$NativeUi_Events$constantMsgEvent = F2(
+	function (name, msg) {
+		return A2(
+			_user$project$NativeUi$on,
+			name,
+			_elm_lang$core$Json_Decode$succeed(msg));
+	});
+var _user$project$NativeUi_Events$onLayout = _user$project$NativeUi_Events$constantMsgEvent('Layout');
+var _user$project$NativeUi_Events$onPress = _user$project$NativeUi_Events$constantMsgEvent('Press');
+var _user$project$NativeUi_Events$onLongPress = _user$project$NativeUi_Events$constantMsgEvent('LongPress');
+var _user$project$NativeUi_Events$onRegionChange = _user$project$NativeUi_Events$constantMsgEvent('RegionChange');
+var _user$project$NativeUi_Events$onRegionChangeComplete = _user$project$NativeUi_Events$constantMsgEvent('RegionChangeComplete');
+var _user$project$NativeUi_Events$onAnnotationPress = _user$project$NativeUi_Events$constantMsgEvent('AnnotationPress');
+var _user$project$NativeUi_Events$onRefresh = _user$project$NativeUi_Events$constantMsgEvent('Refresh');
+var _user$project$NativeUi_Events$onScroll = _user$project$NativeUi_Events$constantMsgEvent('Scroll');
+var _user$project$NativeUi_Events$onScrollAnimationEnd = _user$project$NativeUi_Events$constantMsgEvent('ScrollAnimationEnd');
+var _user$project$NativeUi_Events$onContentSizeChange = _user$project$NativeUi_Events$constantMsgEvent('ContentSizeChange');
+var _user$project$NativeUi_Events$onShowUnderlay = _user$project$NativeUi_Events$constantMsgEvent('ShowUnderlay');
+var _user$project$NativeUi_Events$onHideUnderlay = _user$project$NativeUi_Events$constantMsgEvent('HideUnderlay');
+var _user$project$NativeUi_Events$onNavigateBack = _user$project$NativeUi_Events$constantMsgEvent('NavigateBack');
+
+var _user$project$View_Header$viewTitle = function (props) {
+	return A2(
+		_user$project$NativeUi_Elements$navigationHeaderTitle,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$NativeUi$string(
+				A2(_elm_lang$core$Maybe$withDefault, props.scene.route.key, props.scene.route.title)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$View_Header$view = function (props) {
+	var headerProps = {
+		ctor: '::',
+		_0: _user$project$NativeUi_NavigationExperimental$renderTitleComponent(_user$project$View_Header$viewTitle),
+		_1: {
+			ctor: '::',
+			_0: _user$project$NativeUi_Events$onNavigateBack(_user$project$Navigation_Navigator$Pop),
+			_1: {ctor: '[]'}
+		}
+	};
+	var rendererProps = _user$project$NativeUi_NavigationExperimental$navigationSceneRendererToPropertyList(props);
+	return A2(
+		_user$project$NativeUi_Elements$navigationHeader,
+		A2(_elm_lang$core$Basics_ops['++'], rendererProps, headerProps),
+		{ctor: '[]'});
+};
 
 var _user$project$NativeUi_Properties$statusBarHeight = function (val) {
 	return A2(
@@ -7985,6 +8857,12 @@ var _user$project$NativeUi_Properties$rotateEnabled = function (val) {
 		'rotateEnabled',
 		_elm_lang$core$Json_Encode$bool(val));
 };
+var _user$project$NativeUi_Properties$multiline = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'multiline',
+		_elm_lang$core$Json_Encode$bool(val));
+};
 var _user$project$NativeUi_Properties$zoomEnabled = function (val) {
 	return A2(
 		_user$project$NativeUi$property,
@@ -8087,6 +8965,18 @@ var _user$project$NativeUi_Properties$selectable = function (val) {
 		'selectable',
 		_elm_lang$core$Json_Encode$bool(val));
 };
+var _user$project$NativeUi_Properties$valueFloat = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'value',
+		_elm_lang$core$Json_Encode$float(val));
+};
+var _user$project$NativeUi_Properties$valueString = function (val) {
+	return A2(
+		_user$project$NativeUi$property,
+		'value',
+		_elm_lang$core$Json_Encode$string(val));
+};
 var _user$project$NativeUi_Properties$numberOfLines = function (val) {
 	return A2(
 		_user$project$NativeUi$property,
@@ -8142,33 +9032,6 @@ var _user$project$NativeUi_Properties$TabBarItemPositioningAuto = {ctor: 'TabBar
 var _user$project$NativeUi_Properties$TabBarItemPositioningCenter = {ctor: 'TabBarItemPositioningCenter'};
 var _user$project$NativeUi_Properties$TabBarItemPositioningFill = {ctor: 'TabBarItemPositioningFill'};
 
-var _user$project$NativeUi_Events$onPickerValueChange = function (tagger) {
-	return A2(
-		_user$project$NativeUi$on,
-		'PickerValueChange',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$core$Json_Decode$string));
-};
-var _user$project$NativeUi_Events$constantMsgEvent = F2(
-	function (name, msg) {
-		return A2(
-			_user$project$NativeUi$on,
-			name,
-			_elm_lang$core$Json_Decode$succeed(msg));
-	});
-var _user$project$NativeUi_Events$onLayout = _user$project$NativeUi_Events$constantMsgEvent('Layout');
-var _user$project$NativeUi_Events$onPress = _user$project$NativeUi_Events$constantMsgEvent('Press');
-var _user$project$NativeUi_Events$onLongPress = _user$project$NativeUi_Events$constantMsgEvent('LongPress');
-var _user$project$NativeUi_Events$onRegionChange = _user$project$NativeUi_Events$constantMsgEvent('RegionChange');
-var _user$project$NativeUi_Events$onRegionChangeComplete = _user$project$NativeUi_Events$constantMsgEvent('RegionChangeComplete');
-var _user$project$NativeUi_Events$onAnnotationPress = _user$project$NativeUi_Events$constantMsgEvent('AnnotationPress');
-var _user$project$NativeUi_Events$onRefresh = _user$project$NativeUi_Events$constantMsgEvent('Refresh');
-var _user$project$NativeUi_Events$onScroll = _user$project$NativeUi_Events$constantMsgEvent('Scroll');
-var _user$project$NativeUi_Events$onScrollAnimationEnd = _user$project$NativeUi_Events$constantMsgEvent('ScrollAnimationEnd');
-var _user$project$NativeUi_Events$onContentSizeChange = _user$project$NativeUi_Events$constantMsgEvent('ContentSizeChange');
-var _user$project$NativeUi_Events$onShowUnderlay = _user$project$NativeUi_Events$constantMsgEvent('ShowUnderlay');
-var _user$project$NativeUi_Events$onHideUnderlay = _user$project$NativeUi_Events$constantMsgEvent('HideUnderlay');
-var _user$project$NativeUi_Events$onNavigateBack = _user$project$NativeUi_Events$constantMsgEvent('NavigateBack');
-
 var _user$project$View_Schedule$styleRow = {
 	ctor: '::',
 	_0: _user$project$NativeUi_Style$padding(1),
@@ -8212,7 +9075,20 @@ var _user$project$View_Schedule$row = function (children) {
 };
 var _user$project$View_Schedule$loadingView = A2(
 	_user$project$NativeUi_Elements$view,
-	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _user$project$NativeUi$style(
+			{
+				ctor: '::',
+				_0: _user$project$NativeUi_Style$height(54),
+				_1: {
+					ctor: '::',
+					_0: _user$project$NativeUi_Style$width(54),
+					_1: {ctor: '[]'}
+				}
+			}),
+		_1: {ctor: '[]'}
+	},
 	{
 		ctor: '::',
 		_0: A2(
@@ -8226,13 +9102,22 @@ var _user$project$View_Schedule$loadingView = A2(
 		_1: {ctor: '[]'}
 	});
 var _user$project$View_Schedule$movieView = function (movie) {
+	var onPressEvent = _user$project$Navigation_Navigator$CombineMsg(
+		{
+			ctor: '::',
+			_0: _user$project$Navigation_Navigator$PushMovieDetail(movie),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Navigation_Navigator$AppMsg(
+					_user$project$Update_Main$MovieMsg(
+						_user$project$Update_Movie$GetMovie(movie))),
+				_1: {ctor: '[]'}
+			}
+		});
 	var _p0 = movie;
 	var title = _p0.title;
 	var thumbnaiUrl = _p0.thumbnaiUrl;
 	var id = _p0.id;
-	var onPressEvent = _user$project$Msg$NavigatorMsg(
-		_user$project$Navigation_Navigator$Scene(
-			A2(_user$project$Navigation_Scene$MovieDetailPage, id, movie)));
 	return A2(
 		_user$project$NativeUi_Elements$view,
 		{ctor: '[]'},
@@ -8299,6 +9184,27 @@ var _user$project$View_Schedule$scheduleView = function (schedule) {
 			},
 			schedule.movies));
 };
+var _user$project$View_Schedule$linkReviews = A2(
+	_user$project$NativeUi_Elements$text,
+	{
+		ctor: '::',
+		_0: _user$project$NativeUi$style(
+			{
+				ctor: '::',
+				_0: _user$project$NativeUi_Style$height(35),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: _user$project$NativeUi_Events$onPress(_user$project$Navigation_Navigator$PushReviewedList),
+			_1: {ctor: '[]'}
+		}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$NativeUi$string('reviews'),
+		_1: {ctor: '[]'}
+	});
 var _user$project$View_Schedule$view = function (model) {
 	var schedule = A2(
 		_elm_lang$core$Maybe$withDefault,
@@ -8309,8 +9215,12 @@ var _user$project$View_Schedule$view = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: schedule,
-			_1: {ctor: '[]'}
+			_0: _user$project$View_Schedule$linkReviews,
+			_1: {
+				ctor: '::',
+				_0: schedule,
+				_1: {ctor: '[]'}
+			}
 		});
 };
 
@@ -8338,7 +9248,7 @@ var _user$project$View_MovieDetail$button = F3(
 										_0: _user$project$NativeUi_Style$paddingBottom(5),
 										_1: {
 											ctor: '::',
-											_0: _user$project$NativeUi_Style$width(60),
+											_0: _user$project$NativeUi_Style$width(100),
 											_1: {ctor: '[]'}
 										}
 									}
@@ -8358,22 +9268,74 @@ var _user$project$View_MovieDetail$button = F3(
 				_1: {ctor: '[]'}
 			});
 	});
-var _user$project$View_MovieDetail$view = F2(
-	function (vo, detail) {
-		var onPressEvent = A2(
-			_elm_lang$core$Maybe$withDefault,
-			_user$project$Msg$None,
+var _user$project$View_MovieDetail$movieImage = function (movie) {
+	return A2(
+		_user$project$NativeUi_Elements$image,
+		{
+			ctor: '::',
+			_0: _user$project$NativeUi$style(
+				{
+					ctor: '::',
+					_0: _user$project$NativeUi_Style$height(64),
+					_1: {
+						ctor: '::',
+						_0: _user$project$NativeUi_Style$width(64),
+						_1: {
+							ctor: '::',
+							_0: _user$project$NativeUi_Style$marginBottom(30),
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _user$project$NativeUi_Properties$source(
+					A2(_elm_lang$core$Basics_ops['++'], 'http://www.aeoncinema.com', movie.thumbnaiUrl)),
+				_1: {ctor: '[]'}
+			}
+		},
+		{ctor: '[]'});
+};
+var _user$project$View_MovieDetail$viewMovie = F2(
+	function (review, detail) {
+		var onPressEvent = _user$project$Navigation_Navigator$PushReviewScene(detail);
+		var reviewButton = A3(
+			_user$project$View_MovieDetail$button,
+			onPressEvent,
+			'#d33',
 			A2(
-				_elm_lang$core$Maybe$map,
-				function (_p0) {
-					return _user$project$Msg$NavigatorMsg(
-						_user$project$Navigation_Navigator$Scene(
-							_user$project$Navigation_Scene$ReviewPage(_p0)));
-				},
-				detail));
+				_elm_lang$core$Maybe$withDefault,
+				'レビュー',
+				A2(
+					_elm_lang$core$Maybe$map,
+					function (n) {
+						return 'レビュー ✔︎';
+					},
+					review)));
 		return A2(
-			_user$project$NativeUi_Elements$scrollView,
-			{ctor: '[]'},
+			_user$project$NativeUi_Elements$view,
+			{
+				ctor: '::',
+				_0: _user$project$NativeUi$style(
+					{
+						ctor: '::',
+						_0: _user$project$NativeUi_Style$paddingLeft(20),
+						_1: {
+							ctor: '::',
+							_0: _user$project$NativeUi_Style$paddingRight(20),
+							_1: {
+								ctor: '::',
+								_0: _user$project$NativeUi_Style$paddingBottom(20),
+								_1: {
+									ctor: '::',
+									_0: _user$project$NativeUi_Style$paddingTop(20),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
 			{
 				ctor: '::',
 				_0: A2(
@@ -8381,37 +9343,18 @@ var _user$project$View_MovieDetail$view = F2(
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _user$project$NativeUi$string(vo.title),
+						_0: _user$project$NativeUi$string(detail.title),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_user$project$NativeUi_Elements$image,
-						{
-							ctor: '::',
-							_0: _user$project$NativeUi$style(
-								{
-									ctor: '::',
-									_0: _user$project$NativeUi_Style$height(64),
-									_1: {
-										ctor: '::',
-										_0: _user$project$NativeUi_Style$width(64),
-										_1: {
-											ctor: '::',
-											_0: _user$project$NativeUi_Style$marginBottom(30),
-											_1: {ctor: '[]'}
-										}
-									}
-								}),
-							_1: {
-								ctor: '::',
-								_0: _user$project$NativeUi_Properties$source(
-									A2(_elm_lang$core$Basics_ops['++'], 'http://www.aeoncinema.com', vo.thumbnaiUrl)),
-								_1: {ctor: '[]'}
-							}
-						},
-						{ctor: '[]'}),
+						_elm_lang$core$Maybe$withDefault,
+						A2(
+							_user$project$NativeUi_Elements$text,
+							{ctor: '[]'},
+							{ctor: '[]'}),
+						A2(_elm_lang$core$Maybe$map, _user$project$View_MovieDetail$movieImage, detail.base)),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -8436,7 +9379,7 @@ var _user$project$View_MovieDetail$view = F2(
 							},
 							{
 								ctor: '::',
-								_0: A3(_user$project$View_MovieDetail$button, onPressEvent, '#d33', 'レビュー'),
+								_0: reviewButton,
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -8446,17 +9389,7 @@ var _user$project$View_MovieDetail$view = F2(
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _user$project$NativeUi$string(
-										A2(
-											_elm_lang$core$Maybe$withDefault,
-											'',
-											A2(
-												_elm_lang$core$Maybe$map,
-												function (_p1) {
-													var _p2 = _p1;
-													return _p2.story;
-												},
-												detail))),
+									_0: _user$project$NativeUi$string(detail.story),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
@@ -8465,150 +9398,378 @@ var _user$project$View_MovieDetail$view = F2(
 				}
 			});
 	});
+var _user$project$View_MovieDetail$view = F2(
+	function (review, detail) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			A2(
+				_user$project$NativeUi_Elements$view,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_user$project$NativeUi_Elements$text,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi$string('loading...'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			A2(
+				_elm_lang$core$Maybe$map,
+				_user$project$View_MovieDetail$viewMovie(review),
+				detail));
+	});
 
-var _user$project$App$header = function (model) {
+var _user$project$View_ReviewComponent_View$reviewDescribeView = function (_p0) {
+	var _p1 = _p0;
 	return A2(
 		_user$project$NativeUi_Elements$view,
 		{ctor: '[]'},
 		{
 			ctor: '::',
 			_0: A2(
-				_user$project$NativeUi_Elements$text,
+				_user$project$NativeUi_Elements$textInput,
 				{
 					ctor: '::',
-					_0: _user$project$NativeUi_Events$onPress(
-						_user$project$Msg$NavigatorMsg(_user$project$Navigation_Navigator$Back)),
-					_1: {ctor: '[]'}
+					_0: _user$project$NativeUi$style(
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi_Style$height(80),
+							_1: {
+								ctor: '::',
+								_0: _user$project$NativeUi_Style$backgroundColor('white'),
+								_1: {
+									ctor: '::',
+									_0: _user$project$NativeUi_Style$flexDirection('row'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _user$project$NativeUi_Properties$valueString(_p1.editingReview.describe),
+						_1: {
+							ctor: '::',
+							_0: _user$project$NativeUi_Properties$multiline(true),
+							_1: {
+								ctor: '::',
+								_0: _user$project$NativeUi_Events$onChangeText(
+									function (_p2) {
+										return _user$project$Navigation_Navigator$ReviewSceneMsg(
+											_user$project$View_ReviewComponent_Model$EditDescribe(_p2));
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
 				},
-				{
-					ctor: '::',
-					_0: _user$project$NativeUi$string('もどる'),
-					_1: {ctor: '[]'}
-				}),
+				{ctor: '[]'}),
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$App$view = function (model) {
-	var sceneView = function () {
-		var _p0 = model.navigator.page;
-		switch (_p0.ctor) {
-			case 'SchedulePage':
+var _user$project$View_ReviewComponent_View$reviewPointView = function (model) {
+	return A2(
+		_user$project$NativeUi_Elements$view,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_user$project$NativeUi_Elements$slider,
+				{
+					ctor: '::',
+					_0: _user$project$NativeUi_Properties$valueFloat(
+						_elm_lang$core$Basics$toFloat(model.editingReview.point) / 100),
+					_1: {
+						ctor: '::',
+						_0: _user$project$NativeUi_Events$onSlidingComplete(
+							function (_p3) {
+								return _user$project$Navigation_Navigator$ReviewSceneMsg(
+									_user$project$View_ReviewComponent_Model$EditPoint(
+										_elm_lang$core$Basics$floor(
+											A2(
+												F2(
+													function (x, y) {
+														return x * y;
+													}),
+												100,
+												_p3))));
+							}),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$View_ReviewComponent_View$wrapReviewMsg = function (msg) {
+	return _user$project$Navigation_Navigator$AppMsg(
+		_user$project$Update_Main$ReviewMsg(msg));
+};
+var _user$project$View_ReviewComponent_View$reviewSubmitView = function (_p4) {
+	var _p5 = _p4;
+	var _p7 = _p5.editingReview;
+	var storeReviewMsg = A2(
+		_elm_lang$core$Maybe$withDefault,
+		_user$project$Update_Review$NoMsg,
+		A2(
+			_elm_lang$core$Maybe$map,
+			function (movieId) {
+				return _user$project$Update_Review$StoreReview(_p7);
+			},
+			_p5.movieId));
+	var submitEvent = _user$project$Navigation_Navigator$CombineMsg(
+		{
+			ctor: '::',
+			_0: _user$project$View_ReviewComponent_View$wrapReviewMsg(storeReviewMsg),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Navigation_Navigator$Pop,
+				_1: {ctor: '[]'}
+			}
+		});
+	return A2(
+		_user$project$NativeUi_Elements$view,
+		{
+			ctor: '::',
+			_0: _user$project$NativeUi$style(
+				{
+					ctor: '::',
+					_0: _user$project$NativeUi_Style$alignSelf('center'),
+					_1: {
+						ctor: '::',
+						_0: _user$project$NativeUi_Style$paddingTop(5),
+						_1: {
+							ctor: '::',
+							_0: _user$project$NativeUi_Style$paddingBottom(8),
+							_1: {
+								ctor: '::',
+								_0: _user$project$NativeUi_Style$width(60),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: function (result) {
+				var _p6 = result;
+				if (_p6.ctor === 'Ok') {
+					return A2(
+						_user$project$NativeUi_Elements$text,
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi_Events$onPress(submitEvent),
+							_1: {
+								ctor: '::',
+								_0: _user$project$NativeUi$style(
+									{
+										ctor: '::',
+										_0: _user$project$NativeUi_Style$textAlign('center'),
+										_1: {
+											ctor: '::',
+											_0: _user$project$NativeUi_Style$backgroundColor('white'),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi$string('submit'),
+							_1: {ctor: '[]'}
+						});
+				} else {
+					return A2(
+						_user$project$NativeUi_Elements$text,
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi$style(
+								{
+									ctor: '::',
+									_0: _user$project$NativeUi_Style$textAlign('center'),
+									_1: {
+										ctor: '::',
+										_0: _user$project$NativeUi_Style$backgroundColor('red'),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi$string(_p6._0),
+							_1: {ctor: '[]'}
+						});
+				}
+			}(
+				_user$project$Model_Review$validation(_p7)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$View_ReviewComponent_View$view = function (model) {
+	return A2(
+		_user$project$NativeUi_Elements$view,
+		{
+			ctor: '::',
+			_0: _user$project$NativeUi$style(
+				{
+					ctor: '::',
+					_0: _user$project$NativeUi_Style$paddingLeft(20),
+					_1: {
+						ctor: '::',
+						_0: _user$project$NativeUi_Style$paddingRight(20),
+						_1: {
+							ctor: '::',
+							_0: _user$project$NativeUi_Style$paddingBottom(20),
+							_1: {
+								ctor: '::',
+								_0: _user$project$NativeUi_Style$paddingTop(20),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$View_ReviewComponent_View$reviewDescribeView(model),
+			_1: {
+				ctor: '::',
+				_0: _user$project$View_ReviewComponent_View$reviewPointView(model),
+				_1: {
+					ctor: '::',
+					_0: _user$project$View_ReviewComponent_View$reviewSubmitView(model),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+
+var _user$project$View$contentsView = F2(
+	function (model, _p0) {
+		var _p1 = _p0;
+		var _p3 = _p1.scene;
+		var _p2 = _p3.key;
+		switch (_p2) {
+			case 'scene_schedule':
 				return _user$project$View_Schedule$view(model.appModel);
-			case 'MovieDetailPage':
-				var movieDetail = A2(_elm_lang$core$Dict$get, _p0._0, model.appModel.movieList);
-				return A2(_user$project$View_MovieDetail$view, _p0._1, movieDetail);
+			case 'scene_movie':
+				var movieView = function (id) {
+					return _user$project$View_MovieDetail$view(
+						A2(_elm_lang$core$Dict$get, id, model.appModel.reviews));
+				};
+				return A2(
+					_elm_lang$core$Maybe$withDefault,
+					A2(
+						_user$project$NativeUi_Elements$text,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi$string('loading'),
+							_1: {ctor: '[]'}
+						}),
+					A2(
+						_elm_lang$core$Maybe$map,
+						function (id) {
+							return A2(
+								movieView,
+								id,
+								A2(_elm_lang$core$Dict$get, id, model.appModel.movieList));
+						},
+						model.movieSceneModel));
+			case 'scene_review':
+				return A2(
+					_elm_lang$core$Maybe$withDefault,
+					A2(
+						_user$project$NativeUi_Elements$text,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _user$project$NativeUi$string('loading'),
+							_1: {ctor: '[]'}
+						}),
+					A2(
+						_elm_lang$core$Maybe$map,
+						function (movie) {
+							return _user$project$View_ReviewComponent_View$view(model.reviewSceneModel.reviewComponent);
+						},
+						model.reviewSceneModel.movie));
 			default:
 				return A2(
 					_user$project$NativeUi_Elements$text,
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _user$project$NativeUi$string(_p0._0.title),
+						_0: _user$project$NativeUi$string(_p3.key),
 						_1: {ctor: '[]'}
 					});
 		}
-	}();
+	});
+var _user$project$View$view = function (model) {
 	return A2(
 		_user$project$NativeUi_Elements$view,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$NativeUi$style(
+				{
+					ctor: '::',
+					_0: _user$project$NativeUi_Style$flex(1),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A2(
-				_user$project$NativeUi_Elements$view,
+				_user$project$NativeUi_Elements$navigationCardStack,
 				{
 					ctor: '::',
 					_0: _user$project$NativeUi$style(
 						{
 							ctor: '::',
-							_0: _user$project$NativeUi_Style$height(32),
+							_0: _user$project$NativeUi_Style$flex(20),
 							_1: {ctor: '[]'}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _user$project$NativeUi_NavigationExperimental$navigationState(model.navigator),
+						_1: {
+							ctor: '::',
+							_0: _user$project$NativeUi_NavigationExperimental$renderHeader(_user$project$View_Header$view),
+							_1: {
+								ctor: '::',
+								_0: _user$project$NativeUi_NavigationExperimental$renderScene(
+									_user$project$View$contentsView(model)),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
 				},
 				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: _user$project$App$header(model),
-				_1: {
-					ctor: '::',
-					_0: sceneView,
-					_1: {ctor: '[]'}
-				}
-			}
+			_1: {ctor: '[]'}
 		});
 };
-var _user$project$App$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
-			case 'NavigatorMsg':
-				var navigator = A2(_user$project$Navigation_Navigator$update, _p1._0, model.navigator);
-				var cmd = function () {
-					var _p2 = navigator.page;
-					if (_p2.ctor === 'MovieDetailPage') {
-						return A2(
-							_elm_lang$core$Platform_Cmd$map,
-							function (_p3) {
-								return _user$project$Msg$AppMsg(
-									_user$project$Update_Main$MovieMsg(_p3));
-							},
-							A2(
-								_user$project$Update_Movie$getMovie,
-								_p2._0,
-								_elm_lang$core$Maybe$Just(_p2._1)));
-					} else {
-						return _elm_lang$core$Platform_Cmd$none;
-					}
-				}();
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{navigator: navigator}),
-					{
-						ctor: '::',
-						_0: cmd,
-						_1: {ctor: '[]'}
-					});
-			case 'AppMsg':
-				var _p4 = A2(_user$project$Update_Main$update, _p1._0, model.appModel);
-				var appModel = _p4._0;
-				var cmd = _p4._1;
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{appModel: appModel}),
-					{
-						ctor: '::',
-						_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Msg$AppMsg, cmd),
-						_1: {ctor: '[]'}
-					});
-			default:
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					{ctor: '[]'});
-		}
-	});
-var _user$project$App$Model = F2(
-	function (a, b) {
-		return {navigator: a, appModel: b};
-	});
-var _user$project$App$initialModel = A2(_user$project$App$Model, _user$project$Navigation_Navigator$initialModel, _user$project$Update_Main$initialModel);
+
 var _user$project$App$main = _user$project$NativeUi$program(
 	{
 		init: A2(
 			_elm_lang$core$Platform_Cmd_ops['!'],
-			_user$project$App$initialModel,
+			_user$project$Navigation_Navigator$initialModel,
 			{
 				ctor: '::',
-				_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Msg$AppMsg, _user$project$Update_Main$initialCmd),
+				_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Navigation_Navigator$AppMsg, _user$project$Update_Main$initialCmd),
 				_1: {ctor: '[]'}
 			}),
-		view: _user$project$App$view,
-		update: _user$project$App$update,
-		subscriptions: function (_p5) {
+		view: _user$project$View$view,
+		update: _user$project$Navigation_Navigator$update,
+		subscriptions: function (_p0) {
 			return _elm_lang$core$Platform_Sub$none;
 		}
 	})();

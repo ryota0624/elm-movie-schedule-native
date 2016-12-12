@@ -6,7 +6,6 @@ import Http
 
 type Msg
     = UpdateSchedule (Result Http.Error Schedule)
-    | MovieDetail MovieValueObject
 
 
 type alias Model =
@@ -20,21 +19,14 @@ initialModel =
 
 update : Msg -> Model -> ( ScheduleModel, Cmd Msg )
 update msg model =
-    let
-        log =
-            Debug.log "update" msg
-    in
-        case msg of
-            UpdateSchedule result ->
-                case result of
-                    Ok schedule ->
-                        Maybe.Just schedule ! []
+    case msg of
+        UpdateSchedule result ->
+            case result of
+                Ok schedule ->
+                    Maybe.Just schedule ! []
 
-                    Err err ->
-                        model ! []
-
-            MovieDetail movie ->
-                model ! []
+                Err err ->
+                    model ! []
 
 
 getSchedule : Cmd Msg
