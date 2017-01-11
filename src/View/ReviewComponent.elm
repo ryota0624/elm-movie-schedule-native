@@ -1,23 +1,67 @@
-module View.ReviewComponent.View exposing (..)
+module View.ReviewComponent exposing (..)
 
+import Model.Review exposing (Review, Describe, Point)
+import Model.Movie exposing (Movie, ID)
 import NativeUi as Ui
 import NativeUi.Elements as Elements exposing (text, slider, textInput)
 import NativeUi.Events exposing (onPress, onSlidingComplete, onChangeText)
 import NativeUi.Properties as Properties exposing (multiline, valueString, valueFloat)
 import NativeUi.Style as Style exposing (defaultTransform)
 import Model.Review exposing (Review, Describe, Point, validation)
-import Update.Review as ReviewUpdate
-import Update.Main as MainUpdate
-import Navigation.Navigator as Navigator exposing (Msg)
-import View.ReviewComponent.Model exposing (Model, Msg(SubmitReview, EditDescribe, EditPoint, NoMsg))
 
 
-wrapReviewMsg : ReviewUpdate.Msg -> Navigator.Msg
-wrapReviewMsg msg =
-    Navigator.AppMsg <| MainUpdate.ReviewMsg <| msg
+type alias Validation =
+    Maybe String
 
 
-view : Model -> Ui.Node Navigator.Msg
+type alias Model =
+    { movieId : Maybe ID
+    , editingReview : Review
+    , valid : Validation
+    }
+
+
+type Msg
+    = EditDescribe Describe
+    | EditPoint Point
+    | SubmitReview ID Review
+    | NoMsg
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        EditDescribe describe ->
+            model.movieId
+                |> Maybe.map (\movieId -> { model | editingReview = Review movieId model.editingReview.point describe })
+                |> Maybe.withDefault model
+                |> (\model -> model ! [])
+                |> Debug.log "desc"
+
+        EditPoint point ->
+            model.movieId
+                |> Maybe.map (\movieId -> { model | editingReview = Review movieId point model.editingReview.describe })
+                |> Maybe.withDefault model
+                |> (\model -> model ! [])
+
+        SubmitReview id review ->
+            model ! []
+
+        _ ->
+            model ! []
+
+
+initialModel : ID -> Model
+initialModel id =
+    Model (Just id) (Review id 0 "") Nothing
+
+
+init : Model
+init =
+    Model Nothing (Review "" 0 "") Nothing
+
+
+view : Model -> Ui.Node Msg
 view model =
     Elements.view
         [ Ui.style
@@ -33,14 +77,14 @@ view model =
         ]
 
 
-reviewPointView : Model -> Ui.Node Navigator.Msg
+reviewPointView : Model -> Ui.Node Msg
 reviewPointView model =
     Elements.view
         []
-        [ slider [ valueFloat ((toFloat model.editingReview.point) / 100), onSlidingComplete (((*) 100) >> floor >> EditPoint >> Navigator.ReviewSceneMsg) ] [] ]
+        [ slider [ valueFloat ((toFloat model.editingReview.point) / 100), onSlidingComplete (((*) 100) >> floor >> EditPoint) ] [] ]
 
 
-reviewDescribeView : Model -> Ui.Node Navigator.Msg
+reviewDescribeView : Model -> Ui.Node Msg
 reviewDescribeView { editingReview } =
     Elements.view
         []
@@ -52,22 +96,19 @@ reviewDescribeView { editingReview } =
                 ]
             , valueString editingReview.describe
             , multiline True
-            , onChangeText (EditDescribe >> Navigator.ReviewSceneMsg)
+            , onChangeText (EditDescribe)
             ]
             []
         ]
 
 
-reviewSubmitView : Model -> Ui.Node Navigator.Msg
+reviewSubmitView : Model -> Ui.Node Msg
 reviewSubmitView { movieId, editingReview } =
     let
-        storeReviewMsg =
-            movieId
-                |> Maybe.map (\movieId -> ReviewUpdate.StoreReview editingReview)
-                |> Maybe.withDefault ReviewUpdate.NoMsg
-
         submitEvent =
-            (Navigator.CombineMsg [ wrapReviewMsg storeReviewMsg, Navigator.Pop ])
+            movieId
+                |> Maybe.map (\movieId -> SubmitReview movieId editingReview)
+                |> Maybe.withDefault NoMsg
     in
         Elements.view
             [ Ui.style
@@ -90,7 +131,7 @@ reviewSubmitView { movieId, editingReview } =
                                         , Style.backgroundColor "white"
                                         ]
                                     ]
-                                    [ Ui.string "submit"
+                                    [ Ui.string "保存"
                                     ]
 
                             Err message ->

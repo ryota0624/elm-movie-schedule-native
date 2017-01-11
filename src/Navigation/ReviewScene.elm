@@ -2,7 +2,7 @@ module Navigation.ReviewScene exposing (..)
 
 import Model.Review exposing (Review)
 import Model.Movie exposing (Movie, ID)
-import View.ReviewComponent.Model as ReviewComponent exposing (init)
+import View.ReviewComponent as ReviewComponent exposing (init)
 
 
 type alias Model =

@@ -43,9 +43,21 @@ scheduleView schedule =
     Elements.scrollView [] (schedule.movies |> List.map (movieView >> row))
 
 
+(@@:@) : Int -> Int -> Int
+(@@:@) n m =
+    n + m
+infixr 9 @@:@
+
+
 movieView : Schedule.MovieValueObject -> Ui.Node Msg
 movieView movie =
     let
+        ten =
+            5 @@:@ 5
+
+        s =
+            String.repeat ten "h"
+
         { title, thumbnaiUrl, id } =
             movie
 

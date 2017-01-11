@@ -9,8 +9,11 @@ import View.Schedule as ScheduleView
 import View.MovieDetail as MovieView
 import NativeUi.Style as Style
 import NativeUi as Ui
-import Navigation.Navigator exposing (Model, Msg(ReviewSceneMsg))
-import View.ReviewComponent.View as ReviewComponent
+import Navigation.Navigator exposing (Model, Msg(ReviewSceneMsg, AppMsg, CombineMsg, Pop))
+import Update.Main as MainUpdate
+import Update.Review as ReviewUpdate
+import View.ReviewComponent as ReviewComponent
+import View.ReviewList as ReviewList
 
 
 -- import NativeUi.Properties as Properties
@@ -43,14 +46,27 @@ contentsView model { scene } =
                         (model.appModel.reviews |> Dict.get id)
             in
                 model.movieSceneModel
-                    |> Maybe.map ((\id -> model.appModel.movieList |> Dict.get id |> movieView id))
+                    |> Maybe.map (\id -> model.appModel.movieList |> Dict.get id |> movieView id)
                     |> Maybe.withDefault (Elements.text [] [ NativeUi.string "loading" ])
 
         "scene_review" ->
             model.reviewSceneModel.movie
                 |> Maybe.map
-                    (\movie -> (ReviewComponent.view model.reviewSceneModel.reviewComponent))
+                    (\movie -> Ui.map reviewSceneMsgWrap (ReviewComponent.view model.reviewSceneModel.reviewComponent))
                 |> Maybe.withDefault (Elements.text [] [ NativeUi.string "loading" ])
+
+        "scene_reviewed" ->
+            ReviewList.view model.appModel
 
         _ ->
             Elements.text [] [ NativeUi.string scene.key ]
+
+
+reviewSceneMsgWrap : ReviewComponent.Msg -> Msg
+reviewSceneMsgWrap msg =
+    case msg of
+        ReviewComponent.SubmitReview id review ->
+            CombineMsg [ AppMsg <| MainUpdate.ReviewMsg <| ReviewUpdate.StoreReview review, Pop ]
+
+        _ ->
+            ReviewSceneMsg msg
